@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
+  root 'ideas#index'
   namespace 'api' do
     namespace 'v1' do
-      root 'ideas#index'
       resources :categories do
         resources :ideas
       end

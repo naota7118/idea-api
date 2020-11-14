@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  namespace :api, format: 'json' do
-    resources :ideas
-  end
+  resources :ideas
+  root 'ideas#index'
+  # namespace :api do
+  #   resources :ideas, defaults: { format: 'json'}
+  # end
 end

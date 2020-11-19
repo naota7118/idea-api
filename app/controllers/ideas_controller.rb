@@ -2,8 +2,23 @@ class IdeasController < ApplicationController
   before_action :set_idea, only: [:show, :update, :destroy]
 
   def index
+    binding.pry
     @ideas = Idea.order(created_at: :desc)
-    render json: { id: @ideas.ids, name: @ideas.select("body") }
+    @ideasIds = @ideas.select(:id)
+    @ideasId = @ideasIds.map {|ideaId| ideaId.id } 
+
+    @categoryIds = @ideas.select(:category_id)
+    @categoryId =  @categoryIds.map {|categoryId| categoryId.category_id } 
+
+    @bodies = @ideas.select(:body)
+    @body = @bodies.map {|body| body.body }
+
+    render json: { 
+      "id": @ideasId,
+      "category": @categoryId,
+      "body": @body
+    }
+    binding.pry
   end
 
   def show

@@ -4,29 +4,17 @@ class IdeasController < ApplicationController
   def index
     binding.pry
     @ideas = Idea.order(id: :asc)
-    # @ideasIds = @ideas.select(:id)
-
-    # @categoryIds = @ideas.select(:category_id)
-
-    @data = Array.new
-    # @bodies = @ideas.select(:body)
-
-    # data << @ideasIds.map {|id| id[:id]}
-    # data << @bodies.map {|body| body[:body]}
-
-    @data << @ideas.map do |idea|
-      {"id" => idea[:id], "body" => idea[:body]}
-    end
-
-    # data << @bodies.map do |body|
-    #   {"body" => body[:body]}
+    # そのカテゴリーidのカテゴリー名を取得する
+    # @ideas.map do |idea|
+    #   @category = Category.find_by(id: idea[:category_id].select(:name)
     # end
 
-    render json: { 
-      "id": @ideasId,
-      "category": @categoryId,
-      "body": @body
-    }
+    @data = []
+    @data << @ideas.map do |idea|
+      {"id" => idea[:id], "category" => idea[:category_id], "body" => idea[:body]}
+    end
+
+    render json: @data
     binding.pry
   end
 

@@ -12,7 +12,6 @@ class IdeasController < ApplicationController
   
   def create
 
-  binding.pry
     @category = Category.new(category_params)
     @idea = Idea.new(idea_params)
 
@@ -29,12 +28,13 @@ class IdeasController < ApplicationController
         head :unprocessable_entity
       end
     
-    # 新規category_nameがすでにcategoriesテーブルに存在しない場合
+    # 新規category_nameがまだcategoriesテーブルに存在していない場合
     else
       # categoriesテーブルをidの小さい順に並べて最後のidを取得し、それに+1したidを新規category_nameに付与。
       # 配列の形で格納されているのでlastメソッドで最後の値を取得
-      @lastCategoryId = Category.order('id DESC').limit(1).ids.last
+      @lastCategoryId = Category.order('name DESC').limit(1).ids.last
       @idea.category_id = @lastCategoryId + 1
+
       if @idea.save && @category.save
         # idea_nameの登録が成功したらステータスコード201を返す
         head :created
@@ -43,7 +43,6 @@ class IdeasController < ApplicationController
         head :unprocessable_entity
       end
     end
-  binding.pry
 
   end
 

@@ -2,8 +2,21 @@ class IdeasController < ApplicationController
   before_action :set_idea, only: [:show, :update, :destroy]
 
   def index
-    @ideas = Idea.order(created_at: :desc)
-    render json: { id: @ideas.ids, name: @ideas.select("body") }
+    binding.pry
+    @ideas = Idea.order(id: :asc)
+    # そのカテゴリーidのカテゴリー名を取得する
+
+    # @ideas.map do |idea|
+    #   @iii =  Category.find_by(id: idea[:category_id]).name
+    # end
+
+    @data = []
+    @data << @ideas.map do |idea|
+      {"id" => idea[:id], "category" => Category.find_by(id: idea[:category_id]).name, "body" => idea[:body]}
+    end
+
+    render json: @data
+    binding.pry
   end
 
   def show

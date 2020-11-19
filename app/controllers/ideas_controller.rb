@@ -3,15 +3,24 @@ class IdeasController < ApplicationController
 
   def index
     binding.pry
-    @ideas = Idea.order(created_at: :desc)
+    @ideas = Idea.order(id: :asc)
     @ideasIds = @ideas.select(:id)
-    @ideasId = @ideasIds.map {|ideaId| ideaId.id } 
 
     @categoryIds = @ideas.select(:category_id)
-    @categoryId =  @categoryIds.map {|categoryId| categoryId.category_id } 
 
+    data = ["id"]
     @bodies = @ideas.select(:body)
-    @body = @bodies.map {|body| body.body }
+
+    # data << @ideasIds.map {|id| id[:id]}
+    # data << @bodies.map {|body| body[:body]}
+
+    data << @ideasIds.map do |id|
+      {"id" => id[:id]}
+    end
+
+    data << @bodies.map do |body|
+      {"body" => body[:body]}
+    end
 
     render json: { 
       "id": @ideasId,

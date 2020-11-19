@@ -12,54 +12,37 @@ class IdeasController < ApplicationController
   
   def create
 
-  binding.pry
     @category = Category.new(category_params)
     @idea = Idea.new(idea_params)
 
-    # if Category.exists?(name: @category.name)
-    #   @categoryId = Category.find_by(name: @category.name).select('id')
-    #   @idea.category_id = @categoryId
+    # 新規category_nameがすでにcategoriesテーブルに存在する場合
+    if Category.exists?(name: category_params[:name])
+      @categoryId = Category.find_by(name: category_params[:name]).id
+      @idea.category_id = @categoryId
 
-    if @idea.save && @category.save
-      # ステータスコード201を返す
-      head :created
+      if @idea.save
+        # idea_nameの登録が成功したらステータスコード201を返す
+        head :created
+      else
+        # idea_nameの登録が失敗したらステータスコード422を返す（バリデーションエラー時）
+        head :unprocessable_entity
+      end
+    
+    # 新規category_nameがまだcategoriesテーブルに存在していない場合
     else
-      # ステータスコード422を返す（バリデーションエラー時）
-      head :unprocessable_entity
+      # categoriesテーブルをidの小さい順に並べて最後のidを取得し、それに+1したidを新規category_nameに付与。
+      # 配列の形で格納されているのでlastメソッドで最後の値を取得
+      @lastCategoryId = Category.order('name DESC').limit(1).ids.last
+      @idea.category_id = @lastCategoryId + 1
+
+      if @idea.save && @category.save
+        # idea_nameの登録が成功したらステータスコード201を返す
+        head :created
+      else
+        # idea_nameの登録が失敗したらステータスコード422を返す（バリデーションエラー時）
+        head :unprocessable_entity
+      end
     end
-  binding.pry
-    # # すでにそのcategory_nameがcategoriesテーブルのnameカラムに存在する場合
-    # if Category.exists?(name: category_params[:name])
-
-    #   # 登録しようとしてるcategory名と一致するcategory名をcategoriesテーブルから検索して探す
-    #   @categoryId = Category.find_by(name: category_params[:name]).select('id')
-
-    #   @idea = Idea.new(idea_params)
-
-    #   if @idea.save && @categoryId.save
-    #     # ステータスコード201を返す
-    #     head :created
-    #   else
-    #     # ステータスコード422を返す（バリデーションエラー時）
-    #     head :unprocessable_entity
-    #   end
-
-    # # まだそのcategory_nameがcategoriesテーブルのnameカラムに存在してない場合
-    # else 
-
-    #   # 新たなcategoryとしてcategoriesテーブルに登録し、ideasテーブルに登録する
-    #   @category = Category.new(category_params)
-    #   @idea = Idea.new(idea_params)
-
-    #   if @category.save && @idea.save
-    #     # ステータスコード201を返す
-    #     head :created
-    #   else
-    #     # ステータスコード422を返す（バリデーションエラー時）
-    #     head :unprocessable_entity
-    #   end
-
-    # end
 
   end
 

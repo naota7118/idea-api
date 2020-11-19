@@ -4,11 +4,6 @@ class IdeasController < ApplicationController
   def index
     binding.pry
     @ideas = Idea.order(id: :asc)
-    # そのカテゴリーidのカテゴリー名を取得する
-
-    # @ideas.map do |idea|
-    #   @iii =  Category.find_by(id: idea[:category_id]).name
-    # end
 
     @data = []
     @data << @ideas.map do |idea|

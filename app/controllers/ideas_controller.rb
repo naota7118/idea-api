@@ -2,7 +2,7 @@ class IdeasController < ApplicationController
   before_action :set_idea, only: [:show, :update, :destroy]
 
   def index
-    binding.pry
+
     @ideas = Idea.order(id: :asc)
 
     @data = []
@@ -11,7 +11,7 @@ class IdeasController < ApplicationController
     end
 
     render json: @data
-    binding.pry
+
   end
 
   def show
